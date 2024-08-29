@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./hr_management_system/hr"
+    ]
+}

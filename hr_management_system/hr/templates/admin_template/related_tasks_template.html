@@ -1,0 +1,107 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Related Tasks for {{ project.name }}
+{% endblock page_title %}
+{% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Tasks for Project: {{ project.name }}</h3>
+
+            <div class="card-tools">
+              <div class="input-group input-group-sm" style="width: 150px;">
+                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-default">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Task Name</th>
+                  <th class="description-col">Description</th>
+                  <th>Due Date</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Assigned To</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for task in tasks %}
+                <tr>
+                  <td>{{ task.id }}</td>
+                  <td>{{ task.name }}</td>
+                  <td class="description-col">{{ task.description|truncatechars:30 }}</td>
+                  <td>{{ task.due_date }}</td>
+                  <td>{{ task.priority }}</td>
+                  <td>{{ task.status }}</td>
+                  <td>
+                    {% for user in task.assigned_to.all %}
+                      <span>{{ user.username }}</span><br>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <a href="{% url 'edit_task' project_id=project.id task_id=task.id %}" class="btn btn-info btn-sm">Edit</a>
+                      <a href="{% url 'delete_task' project_id=project.id task_id=task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="8" class="text-center">No tasks found for this project.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %}
+
+{% block extra_css %}
+<style>
+  /* Ensure fixed table layout */
+  .table {
+    table-layout: fixed;
+  }
+
+  /* Description column styling */
+  .description-col {
+    max-width: 200px; /* Fixed width for the description box */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Action buttons styling */
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .action-buttons a {
+    margin-bottom: 5px; /* Space between buttons */
+  }
+
+  .action-buttons hr {
+    margin: 5px 0; /* Space for the horizontal line */
+  }
+</style>
+{% endblock extra_css %}

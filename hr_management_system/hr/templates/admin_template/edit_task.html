@@ -1,0 +1,66 @@
+{% extends 'admin_template/base_template.html' %}
+
+{% block page_title %}
+Edit Task: {{ task.name }}
+{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Edit Task</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="name">Task Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ task.name }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" id="description" name="description">{{ task.description }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="due_date">Due Date</label>
+                                <input type="date" class="form-control" id="due_date" name="due_date" value="{{ task.due_date }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="priority">Priority</label>
+                                <select class="form-control" id="priority" name="priority">
+                                    <option value="low" {% if task.priority == 'low' %}selected{% endif %}>Low</option>
+                                    <option value="medium" {% if task.priority == 'medium' %}selected{% endif %}>Medium</option>
+                                    <option value="high" {% if task.priority == 'high' %}selected{% endif %}>High</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select class="form-control" id="status" name="status">
+                                    <option value="to_do" {% if task.status == 'to_do' %}selected{% endif %}>To Do</option>
+                                    <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="done" {% if task.status == 'done' %}selected{% endif %}>Done</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="assigned_to">Assign To</label>
+                                <select multiple class="form-control" id="assigned_to" name="assigned_to">
+                                    {% for user in users %}
+                                        <option value="{{ user.id }}" {% if user in task.assigned_to.all %}selected{% endif %}>{{ user.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Task</button>
+                        </form>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock main_content %}

@@ -1,0 +1,109 @@
+{% extends 'admin_template/base_template.html' %}
+{% block page_title %}
+Add Task
+{% endblock page_title %}
+{% load static %}
+{% block main_content %}
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Add Task</h3>
+            </div>
+            <div class="card-body">
+              <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="name">Task Name</label>
+                  <input type="text" name="name" class="form-control" id="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea name="description" class="form-control" id="description" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="due_date">Due Date</label>
+                  <input type="date" name="due_date" class="form-control" id="due_date" required>
+                </div>
+                <div class="form-group">
+                  <label for="priority">Priority</label>
+                  <select name="priority" class="form-control" id="priority" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="status">Status</label>
+                  <select name="status" class="form-control" id="status" required>
+                    <option value="to_do">To Do</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="done">Done</option>
+                  </select>
+                </div>
+
+                <!-- Assign to HODs -->
+                <div class="form-group">
+                  <label>Assign to HODs</label>
+                  <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle form-control" type="button" id="hodDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select HODs
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="hodDropdown">
+                      {% for hod in hods %}
+                        <div class="dropdown-item">
+                          <input type="checkbox" name="hods" value="{{ hod.id }}" id="hod_{{ hod.id }}">
+                          <label for="hod_{{ hod.id }}">{{ hod.username }}</label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Assign to Staff -->
+                <div class="form-group">
+                  <label>Assign to Staff</label>
+                  <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle form-control" type="button" id="staffDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select Staff
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="staffDropdown">
+                      {% for member in staff %}
+                        <div class="dropdown-item">
+                          <input type="checkbox" name="staff" value="{{ member.id }}" id="staff_{{ member.id }}">
+                          <label for="staff_{{ member.id }}">{{ member.username }}</label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Add Task</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+  // Optional: You can add JavaScript to enhance the dropdown functionality if needed.
+  // For example, closing the dropdown when clicking outside of it or on an item.
+  $(document).ready(function(){
+    $(document).click(function (e) {
+      if (!$(e.target).closest('.dropdown').length) {
+        $('.dropdown-menu').removeClass('show');
+      }
+    });
+    $('.dropdown-toggle').click(function(){
+      $(this).next('.dropdown-menu').toggleClass('show');
+    });
+  });
+</script>
+{% endblock custom_js %}
